@@ -2,7 +2,7 @@
   "name": "data_collection",
   "version": "1.0.0",
   "description": "backend server for the stock prediction application. Collects and stores stock prices of various firms",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
