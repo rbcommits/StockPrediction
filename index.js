@@ -1,4 +1,4 @@
-const port = 3000
+const port = process.env.port || 1337
 
 const express = require("express"), expressLogging = require('express-logging'), logger = require('logops');
 const date = require("datejs");
