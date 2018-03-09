@@ -23,35 +23,34 @@ new CronJob('*/60 * * * * *', function() {
             symbol: symbol,
             modules: [ 'summaryDetail', 'financialData'] // see the docs for the full list
           }, function (err, row) {
-                //console.log(row)
-            //data.push({ "date": row.date, "open": row.open, "high": row.high, "low": row.low, "close": row.close})
+                
           }).then(function(res){
-              data.push({ "date": Date.today(), "price": res.financialData.currentPrice, "volume": res.summaryDetail.volume } )
-              //console.log(data)
-              //console.log("===================================")
+              data.push({ "date": (new Date).toLocaleString(), "price": res.financialData.currentPrice, "volume": res.summaryDetail.volume } )
           }))
 
         })
 
         Promise.all(promises).then(function(res){
             MongoClient.connect(dbConnection, function(err, client) {
-                assert.equal(null, err);
-                
-              
-                const db = client.db(dbName);
-              
-                // Insert a single document
-                for(var i = 0; i<10; i++)
+
+                if(err)
                 {
-                    db.collection(symbols[i]).insertOne(data[i], function(err, r) {
-                  assert.equal(null, err);
-                  assert.equal(1, r.insertedCount);
-                
-                    
-                  });
+                    console.log(err)
                 }
-            console.log("Succesfully added data for all companies ")
-            client.close(); 
+                else{
+                    const db = client.db(dbName);
+                
+                    // Insert a single document
+                    for(var i = 0; i<10; i++)
+                    {
+                        db.collection(symbols[i]).insertOne(data[i], function(err, r) {
+                    });
+                    }
+                    console.log("Succesfully added data for all companies ")
+                    client.close();  
+                }
+              
+                
             });
         })
         
@@ -68,6 +67,7 @@ app.get("/stock/today", (req, res) => {
     res.send("request received to get today's stock: ");
 })
 
+//get data for a symbol between 2 time frames
 app.get("/stock/symbol/:symbol/date/:from-:to", (req, res) => {
     from_date = req.params.from
     to_date = req.params.to
@@ -126,28 +126,6 @@ app.get("/stock/insertBulk/:symbol/:duration", (req, res) => {
             
       });
     
-    /*
-    MongoClient.connect(url, function(err, client) {
-        assert.equal(null, err);
-        console.log("Connected correctly to server");
-      
-        const db = client.db(dbName);
-      
-        // Insert a single document
-        db.collection('inserts').insertOne({a:1}, function(err, r) {
-          assert.equal(null, err);
-          assert.equal(1, r.insertedCount);
-      
-          // Insert multiple documents
-          db.collection('inserts').insertMany([{a:2}, {a:3}], function(err, r) {
-            assert.equal(null, err);
-            assert.equal(2, r.insertedCount);
-      
-            client.close();
-          });
-        });
-      });
-      */
       res.send("Succesfully added data for: " + req.params.symbol)
       
 })
