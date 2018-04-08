@@ -74,9 +74,14 @@ export class Sidebar extends Component {
     {
         super(props)
         this.state = {
-            //set state here
-        }
+            search: 'search'
+        };
     }
+
+    updateSearch(event){
+        this.setState({search: event.target.value});
+    }
+
     render() {
         return (
             <div>
@@ -90,10 +95,18 @@ export class Sidebar extends Component {
                         </div>
                         <h2>Companies</h2>
 
+                        <input type="text" 
+                            style = {{
+                                color: "black"
+                            }}
+
+                            value = {this.state.search}
+                            onChange = {this.updateSearch.bind(this)}
+                        />
+
                     </div>
 
-                    <div><input type="text"/></div>
-
+                    
                     {/* Links */}
                     <ul>
                         <li><Printtext company={c1}/></li>
