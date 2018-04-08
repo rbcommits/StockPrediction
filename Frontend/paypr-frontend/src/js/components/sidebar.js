@@ -2,6 +2,72 @@ import React, {Component} from 'react'
 
 import {connect} from 'react-redux'
 
+import data from '../../DB_dump/test.json'
+
+const c1 = {
+    name: "Yahoo",
+    price: 1161.55,
+    delta: 1.29,
+};
+
+const c2 = {
+    name: "Google",
+    price: 11610.55,
+    delta: -1.29,
+};
+
+const c3 = {
+    name: "Facebook",
+    price: 2540.09,
+    delta: 2.01,
+}
+
+function getData(){
+
+    var color = "green"
+    var arrow = "glyphicon glyphicon-chevron-up"
+
+    const last = data.length-1;
+    var obj = data[last];
+
+    if (obj.delta < 0)
+    {
+        color="red"
+        arrow="glyphicon glyphicon-chevron-down"
+    }
+
+    return (
+        <a href="a">
+                <font color={color}><i class={arrow}></i></font> 
+                {obj.name} |
+                | {obj.delta} |
+                | ${obj.price}
+        </a>
+    )
+}
+
+
+function Printtext(props){
+
+    const company = props.company;
+    var color = "green"
+    var arrow = "glyphicon glyphicon-chevron-up"
+
+    if (company.delta < 0)
+    {
+        color="red"
+        arrow="glyphicon glyphicon-chevron-down"
+    }
+    return (
+        <a href="a">
+                <font color={color}><i class={arrow}></i></font> 
+                {company.name} |
+                | {company.delta} |
+                | ${company.price}
+        </a>
+    )
+}
+
 export class Sidebar extends Component {
 
     constructor(props)
@@ -16,98 +82,43 @@ export class Sidebar extends Component {
             <div>
                 <div class="overlay"></div>
                 <div id="sidebar" class="active">
+
+                    {/* Header */}
                     <div class="sidebar-header">
                         <div id="close-sidebar">
-                            <i class="glyphicon glyphicon-chevron-left"></i>
+                            <i class="glyphicon glyphicon-chevron-down"></i>
                         </div>
-                        <h2>Sidebar</h2>
+                        <h2>Companies</h2>
+
                     </div>
+
+                    <div><input type="text"/></div>
+
+                    {/* Links */}
                     <ul>
-                        <li>
-                            <a href="a">
-                                <i class="glyphicon glyphicon-link"></i>
-                                Link
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="#submenu"
-                                class="collapsed"
-                                data-toggle="collapse"
-                                aria-expanded="false">
-                                <i class="glyphicon glyphicon-link"></i>
-                                Link</a>
-                            <ul class="list-unstyled collapse" id="submenu" aria-expanded="false">
-                                <li>
-                                    <a href="a">
-                                        <i class="glyphicon glyphicon-link"></i>
-                                        Link</a>
-                                </li>
-                                <li>
-                                    <a href="a">
-                                        <i class="glyphicon glyphicon-link"></i>
-                                        Link</a>
-                                </li>
-                                <li>
-                                    <a
-                                        href="#submenu2"
-                                        class="collapsed"
-                                        data-toggle="collapse"
-                                        aria-expanded="false">
-                                        <i class="glyphicon glyphicon-link"></i>
-                                        Link</a>
-                                    <ul class="list-unstyled collapse" id="submenu2" aria-expanded="false">
-                                        <li>
-                                            <a href="a">
-                                                <i class="glyphicon glyphicon-link"></i>
-                                                Link</a>
-                                        </li>
-                                        <li>
-                                            <a href="a">
-                                                <i class="glyphicon glyphicon-link"></i>
-                                                Link</a>
-                                        </li>
-                                        <li>
-                                            <a href="a">
-                                                <i class="glyphicon glyphicon-link"></i>
-                                                Link</a>
-                                        </li>
-                                        <li>
-                                            <a href="a">
-                                                <i class="glyphicon glyphicon-link"></i>
-                                                Link</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="a">
-                                        <i class="glyphicon glyphicon-link"></i>
-                                        Link</a>
-                                </li>
-                                <li>
-                                    <a href="a">
-                                        <i class="glyphicon glyphicon-link"></i>
-                                        Link</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="a">
-                                <i class="glyphicon glyphicon-link"></i>
-                                Link</a>
-                        </li>
-                        <li>
-                            <a href="a">
-                                <i class="glyphicon glyphicon-link"></i>
-                                Link</a>
-                        </li>
+                        <li><Printtext company={c1}/></li>
+
+                        <li><Printtext company={c2}/></li>
+
+                        <li><Printtext company={c3}/></li>
+
+                        <li><getData/></li> {/*does not show anything?*/}
+
+                        {/*does show something*/}
+                        {
+                            data.map(
+                                function(){
+                                    const last = data.length-1;
+                                    var obj = data[last];
+                                    return <li>{obj.name}</li>;
+                                }
+                            )
+                        }
+
                     </ul>
-                    <hr/>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Restinguet citius,
-                        si ardentem acceperit. Itaque eos id agere.</p>
-                    <hr/>
 
                 </div>
+
                 <div id="content"></div>
             </div>
         )
