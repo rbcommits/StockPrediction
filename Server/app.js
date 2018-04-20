@@ -67,6 +67,170 @@ app.get("/stock/today", (req, res) => {
     res.send("request received to get today's stock: ");
 })
 
+
+app.get("/stock/highest/:days/:symbol", (req, res) => {
+    var results = {}
+    var days = req.params.days
+    var sym = req.params.symbol
+    var day = parseInt(days);
+    var today = new Date();
+    today.setDate(today.getDate() - day);
+    console.log("date is "+today)
+    
+    MongoClient.connect(dbConnection, function(err, client) {
+                //assert.equal(null, err);
+                //console.log("Connected correctly to server");
+              
+                const db = client.db(dbName);
+              
+                // Insert a single document
+                 results =  db.collection("AAPL").find({date: {$gte: "2018-02-28T00:00:00.000Z"}}).sort({"close":-1}).limit(1).toArray(function(err, result) {
+                   
+                    if(err){
+                         console.log("ERROR");
+                     }
+                    console.log(JSON.stringify(result));
+                    client.close();
+                    });
+                  //db.collection('historical').insertOne(data, function(err, r) {
+                  //assert.equal(null, err);
+                  //assert.equal(1, r.insertedCount);
+                    //console.log("Succesfully added data for: " + req.params.symbol)
+                    //console.log("The highest stock price in past " +days+ " is"+results);
+                    //client.close();
+                  });
+        //results
+        res.send("Asked for results");
+        
+                });
+
+
+
+app.get("/stock/lowest/:days/:symbol", (req, res) => {
+    var results = {}
+    var days = req.params.days
+    var sym = req.params.symbol
+    var day = parseInt(days);
+    var today = new Date();
+    today.setDate(today.getDate() - day);
+    console.log("date is "+today)
+    MongoClient.connect(dbConnection, function(err, client) {
+                //assert.equal(null, err);
+                //console.log("Connected correctly to server");
+              
+                const db = client.db(dbName);
+              
+                // Insert a single document
+                 results =  db.collection("AAPL").find({date: {$gte: "2018-03-01T00:00:00.000Z"}}).sort({"close":+1}).limit(10).toArray(function(err, result) {
+                     if(err){
+                         console.log("ERROR");
+                     }
+                    console.log(JSON.stringify(result));
+                    client.close();
+                    });
+                  //db.collection('historical').insertOne(data, function(err, r) {
+                  //assert.equal(null, err);
+                  //assert.equal(1, r.insertedCount);
+                    //console.log("Succesfully added data for: " + req.params.symbol)
+                    //console.log("The highest stock price in past " +days+ " is"+results);
+                    //client.close();
+                  });
+        //results
+        res.send("Asked for results");
+                });
+
+    
+app.get("/stock/average/:days/:symbol", (req, res) => {
+    var results = {}
+    var days = req.params.days
+    var sym = req.params.symbol
+    var day = parseInt(days);
+    MongoClient.connect(dbConnection, function(err, client) {
+                //assert.equal(null, err);
+                //console.log("Connected correctly to server");
+              
+                const db = client.db(dbName);
+              
+                // Insert a single document
+                 results =  db.collection("historical").aggregate([
+                     {$limit:365},
+                     {$group:{"_id":null,"avg":{$avg:"$close"}}}
+                     
+                    ]);
+                    if(err){
+                         console.log("ERROR");
+                     }
+                    console.log(JSON.stringify(result));
+                    client.close();
+                  //db.collection('historical').insertOne(data, function(err, r) {
+                  //assert.equal(null, err);
+                  //assert.equal(1, r.insertedCount);
+                    //console.log("Succesfully added data for: " + req.params.symbol)
+                    //console.log("The highest stock price in past " +days+ " is"+results);
+                    //client.close();
+                  });
+        //results
+        res.send("Asked for results");
+                });
+
+
+/*
+
+app.get("/stock/average_lower_than_selected/:symbol", (req, res) => {
+    var results = {}
+    var days = req.params.days
+    var sym = req.params.symbol
+    function colListQuery() {
+    var tcol = new Array()
+    tcol= db.getCollectionNames();
+   
+                    MongoClient.connect(dbConnection, function(err, client) {
+                //assert.equal(null, err);
+    
+                    //console.log("Connected correctly to server");
+                        
+                const db = client.db(dbName);
+              
+                // Insert a single document
+                 db.collection("AAPL").find({}).sort({"close":+1}).limit(day).toArray(function(err, lowest) {
+                     if(err){
+                         console.log("ERROR");
+                     }
+                     
+                    for(var i = 1; i < tcol.length ; i++) 
+                    {           
+                            const db = client.db(dbname);
+              
+                            query = “db.” + tcol[i] + “.aggregate([
+                            {$limit:365},
+                            {$group:{"_id":null,"avg":{$avg:"$close"}}}
+                            if(err){
+                                console.log("ERROR");
+                            }
+                    
+                    
+                            ]);
+
+                            var docs= eval(query);
+                            docs.forEach( function(doc, index){ print( “Database_Name:”, db, “Collection_Name:”, tcol[i], “x_value:”, doc.x, “_id:”, doc._id) });
+
+                    }
+    
+                    
+                     });       
+                        
+                        
+                        
+    
+    
+    }
+    );                                    
+        client.close();
+        //results
+        res.send("Asked for results");
+                };
+});
+*/
 //get data for a symbol between 2 time frames
 app.get("/stock/symbol/:symbol/date/:from-:to", (req, res) => {
     from_date = req.params.from
