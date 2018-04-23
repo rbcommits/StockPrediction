@@ -1,0 +1,12 @@
+[
+{"_id":{"$oid":"5a9996fd8820ec102c916dd3"},"name":"Altaba","date":{"$date":"2018-03-02T05:00:00.000Z"},"price":1484.9103,"volume":4400776},
+{"_id":{"$oid":"5a9996fd8820ec102c916dd1"},"name":"Apple","date":{"$date":"2018-03-02T05:00:00.000Z"},"price":72.24,"volume":4832205},
+{"_id":{"$oid":"5a9913828820ec102c916c30"},"name":"Accenture","date":{"$date":"2018-03-02T05:00:00.000Z"},"price":153.81,"volume":4039339},
+{"_id":{"$oid":"5a9913828820ec102c916c31"},"name":"Automatic Data Processing","date":{"$date":"2018-03-02T05:00:00.000Z"},"price":175,"volume":48801970},
+{"_id":{"$oid":"5a9913828820ec102c916c33"},"name":"Amazon","date":{"$date":"2018-03-02T05:00:00.000Z"},"price":113.79,"volume":1746501},
+{"_id":{"$oid":"5a9914348820ec102c916c50"},"name":"Facebook","date":{"$date":"2018-03-02T05:00:00.000Z"},"price":175,"volume":48801970},
+{"_id":{"$oid":"5a9915d88820ec102c916c98"},"name":"Google","date":{"$date":"2018-03-02T05:00:00.000Z"},"price":175.94,"volume":23201626},
+{"_id":{"$oid":"5a9915608820ec102c916c85"},"name":"IBM","date":{"$date":"2018-03-02T05:00:00.000Z"},"price":153.81,"volume":4039339},
+{"_id":{"$oid":"5a9916c98820ec102c916cc2"},"name":"Lockheed Martin","date":{"$date":"2018-03-02T05:00:00.000Z"},"price":153.81,"volume":4039339},
+{"_id":{"$oid":"5a9916518820ec102c916ca6"},"name":"Microsoft","date":{"$date":"2018-03-02T05:00:00.000Z"},"price":113.79,"volume":1746501}
+]
