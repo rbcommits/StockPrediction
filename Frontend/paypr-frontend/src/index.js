@@ -5,6 +5,7 @@ import registerServiceWorker from './js/registerServiceWorker';
 
 import Header from './js/components/header'
 import Sidebar from './js/components/sidebar'
+import Statspage from './js/components/statspage'
 
 import styles from './css/styles.min.css'
 import bootstrap from './bootstrap/css/bootstrap.min.css'
@@ -19,7 +20,7 @@ ReactDOM.render(
             <Header/>
             <div class="row">
                 <div class="col-md-6 col-md-4">
-                    <Sidebar/>
+                    {/*<Sidebar/>*/}
                 </div>
 
             </div>
@@ -28,7 +29,8 @@ ReactDOM.render(
         <div class="col-md-6 col-md-12">
             <div class="row">
                 <div class="col-md-12">
-                    <p class="dashboard-greeting">Hello, Noob</p>
+                    <p class="dashboard-greeting">Queries</p>
+                    <Statspage/>
                 </div>
             </div>
             <div class="row">
