@@ -40,7 +40,7 @@ export default class Statspage extends Component {
             console.log(result);
         })
         */
-        axios.get("localhoxt:1337/stock/today").then((data)=>{
+        axios.get("http://localhost:1337/stock/today").then((data)=>{
             console.log(data);
         })
         //alert('You submitted: ' + params);
