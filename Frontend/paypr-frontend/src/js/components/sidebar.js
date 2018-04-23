@@ -2,50 +2,7 @@ import React, {Component} from 'react'
 
 import {connect} from 'react-redux'
 
-import data from '../../DB_dump/test.json'
-
-const c1 = {
-    name: "Yahoo",
-    price: 1161.55,
-    delta: 1.29,
-};
-
-const c2 = {
-    name: "Google",
-    price: 11610.55,
-    delta: -1.29,
-};
-
-const c3 = {
-    name: "Facebook",
-    price: 2540.09,
-    delta: 2.01,
-}
-
-function getData(){
-
-    var color = "green"
-    var arrow = "glyphicon glyphicon-chevron-up"
-
-    const last = data.length-1;
-    var obj = data[last];
-
-    if (obj.delta < 0)
-    {
-        color="red"
-        arrow="glyphicon glyphicon-chevron-down"
-    }
-
-    return (
-        <a href="a">
-                <font color={color}><i class={arrow}></i></font> 
-                {obj.name} |
-                | {obj.delta} |
-                | ${obj.price}
-        </a>
-    )
-}
-
+import data from '../../DB_dump/datalist.json'
 
 function Printtext(props){
 
@@ -53,7 +10,7 @@ function Printtext(props){
     var color = "green"
     var arrow = "glyphicon glyphicon-chevron-up"
 
-    if (company.delta < 0)
+    if (company.volume < 4000000)
     {
         color="red"
         arrow="glyphicon glyphicon-chevron-down"
@@ -62,7 +19,7 @@ function Printtext(props){
         <a href="a">
                 <font color={color}><i class={arrow}></i></font> 
                 {company.name} |
-                | {company.delta} |
+                | {company.volume} |
                 | ${company.price}
         </a>
     )
@@ -74,7 +31,7 @@ export class Sidebar extends Component {
     {
         super(props)
         this.state = {
-            search: 'search'
+            search: '' // Default Search Bar Text
         };
     }
 
@@ -83,6 +40,12 @@ export class Sidebar extends Component {
     }
 
     render() {
+        let filteredData = data.filter(
+            (filter) => {
+                return filter.name.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1;
+            }
+        );
+
         return (
             <div>
                 <div class="overlay"></div>
@@ -95,9 +58,10 @@ export class Sidebar extends Component {
                         </div>
                         <h2>Companies</h2>
 
+                        {/* Search Bar */}
                         <input type="text" 
                             style = {{
-                                color: "black"
+                                color: "grey"
                             }}
 
                             value = {this.state.search}
@@ -108,22 +72,11 @@ export class Sidebar extends Component {
 
                     
                     {/* Links */}
-                    <ul>
-                        <li><Printtext company={c1}/></li>
-
-                        <li><Printtext company={c2}/></li>
-
-                        <li><Printtext company={c3}/></li>
-
-                        <li><getData/></li> {/*does not show anything?*/}
-
-                        {/*does show something*/}
+                    <ul>            
                         {
-                            data.map(
-                                function(){
-                                    const last = data.length-1;
-                                    var obj = data[last];
-                                    return <li>{obj.name}</li>;
+                            filteredData.map((dataMember)=>
+                                {
+                                    return <li><Printtext company={dataMember}/></li>
                                 }
                             )
                         }
