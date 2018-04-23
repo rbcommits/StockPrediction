@@ -10,6 +10,7 @@ import styles from './css/styles.min.css'
 import bootstrap from './bootstrap/css/bootstrap.min.css'
 import store from './js/redux/store';
 import {Provider} from "react-redux";
+
 ReactDOM.render(
 
 <Provider store={store}>

@@ -10,6 +10,8 @@ const app = express();
 const symbols = ["AAPL", "MSFT", "AABA", "ACN", "ADP", "FB", "AMZN", "GOOGL", "IBM", "LMT"]
 const dbName = "stock_data"
 const dbConnection = "mongodb://raghav:pN98TwHxbGz6@ds046357.mlab.com:46357/stock_data"
+const cors = require('cors')
+
 //Start the schedular to fetch data every minute
 
 var CronJob = require('cron').CronJob;
@@ -59,7 +61,7 @@ new CronJob('*/60 * * * * *', function() {
 
 
 app.use(expressLogging(logger));
-
+app.use(cors())
 app.get("/", (req, res) => {
     res.send("HomePage for stock prediction app")
 })

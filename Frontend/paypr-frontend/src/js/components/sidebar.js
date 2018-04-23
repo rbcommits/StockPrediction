@@ -3,7 +3,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 
 import data from '../../DB_dump/datalist.json'
-
+import Tempdata from '../../DB_dump/datalist.json'
 function Printtext(props){
 
     const company = props.company;
@@ -31,10 +31,15 @@ export class Sidebar extends Component {
     {
         super(props)
         this.state = {
-            search: '' // Default Search Bar Text
+            search: '', // Default Search Bar Text,
+            data: {}
         };
     }
 
+    componentDidMount = () => {
+      this.setState({data:Tempdata})
+    }
+    
     updateSearch(event){
         this.setState({search: event.target.value});
     }
