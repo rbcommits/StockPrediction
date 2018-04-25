@@ -25,7 +25,12 @@ export default class Statspage extends Component {
             days: 'Input Positive Number', //Default Days Text
             search: 'average', //Default Search Text
             data: '',
-            result: {
+            result: { //Data from Server
+                name: "name",
+                price: "price",
+                volume: "volume"
+            },
+            compare: {//Data from Server when calculating stocks less than LOW
                 name: "name",
                 price: "price",
                 volume: "volume"
@@ -79,9 +84,46 @@ export default class Statspage extends Component {
                 <div>
                     <br/>
                     {this.state.search.toUpperCase()}: <Printtext company={this.state.result}/>
+                    <br/>
+                    AVERAGE STOCKS LESS THAN {this.state.result.name.toUpperCase()}:
+
+                    {this.stockLessThan("AAPL")}
+                    {this.stockLessThan("GOOG")}       
+                    {this.stockLessThan("FB")}
+                    {this.stockLessThan("DIDO")}    
                 </div>
             )
         };
+    }
+
+    stockLessThan(company)
+    {
+        if(this.state.search == 'lowest')
+        {
+
+            var params = 'stock/lowest/' + this.state.days + '/' + company;
+
+            axios.get("http://localhost:1337/" + params).then((data)=>{
+                console.log(data);
+                let compare = {...this.state.compare};
+                compare.name = data.data.symbol;
+                compare.price = data.data.data[data.data.data.length-1].open;
+                compare.volume = data.data.data[data.data.data.length-1].volume;    
+                this.setState({compare});
+            })
+
+            if(this.state.result.price <= this.state.compare.price)
+            {
+                return(
+                    <div>
+                        <Printtext company={this.state.compare}/>
+                        {company}
+                        <br/>
+                        <br/>
+                    </div>
+                )
+            }
+        }
     }
 
     render() {
@@ -135,7 +177,6 @@ export default class Statspage extends Component {
                 <li>List of Company IDs and Names with average stock less than lowest of any of the selected companies</li>
             
                 {this.renderResults()}
-
             </div>
         )
     }
