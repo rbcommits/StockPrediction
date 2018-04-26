@@ -206,12 +206,6 @@ app.get("/stock/longtermpred/:symbol", (req, res) => {
         client.close();
 });
 
-app.get("/stock//:symbol", (req, res) => {
-    var results = LONGTERM_PREDICTION
-    
-    
-
-});
 
 
 /*
