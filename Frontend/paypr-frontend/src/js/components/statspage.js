@@ -1,16 +1,41 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 
+function Printtext(props){
+
+    const company = props.company;
+  
+    return (
+        <div>
+                Company: {company.name} <br/>
+                Volume: {company.volume} <br/>
+                Price: ${company.price} <br/>
+                
+        </div>
+    )
+}
+
 export default class Statspage extends Component {
 
     constructor(props)
     {
         super(props)
         this.state = {
-            symbol: 'Input Company Symbol',  //Default Symbol Text
+            symbol: 'Input Company Symbol', //Default Symbol Text
             days: 'Input Positive Number', //Default Days Text
             search: 'average', //Default Search Text
-            data: '' //Result
+            data: '',
+            result: { //Data from Server
+                name: "name",
+                price: "price",
+                volume: "volume"
+            },
+            compare: {//Data from Server when calculating stocks less than LOW
+                name: "name",
+                price: "price",
+                volume: "volume"
+            },
+            renderFlag: 0
         };
         this.updateSearch = this.updateSearch.bind(this);
         this.updateSubmit = this.updateSubmit.bind(this);
@@ -29,22 +54,76 @@ export default class Statspage extends Component {
     updateSearch(event)
     {
         this.setState({search: event.target.value});
+        this.setState({renderFlag: 0});
+
     }
 
     updateSubmit(event)
     {
-        var params = '/stock/' + this.state.search + '/' + this.state.days + '/' + this.state.symbol;
-        /*
-        axios.get('localhost:1337' + params).then(function(result,error){
-            this.setState({data: result})
-            console.log(result);
-        })
-        */
-        axios.get("http://localhost:1337/stock/today").then((data)=>{
+        var params = 'stock/' + this.state.search + '/' + this.state.days + '/' + this.state.symbol;
+
+        axios.get("http://localhost:1337/" + params).then((data)=>{
             console.log(data);
+            let result = {...this.state.result};
+            result.name = data.data.symbol;
+            result.price = data.data.data[data.data.data.length-1].open;
+            result.volume = data.data.data[data.data.data.length-1].volume;    
+            this.setState({result});
         })
-        //alert('You submitted: ' + params);
+
+        this.setState({renderFlag: 1});
+
         event.preventDefault();
+    }
+
+    renderResults()
+    {
+        if(this.state.renderFlag)
+        {
+            return(
+                <div>
+                    <br/>
+                    {this.state.search.toUpperCase()}: <Printtext company={this.state.result}/>
+                    <br/>
+                    AVERAGE STOCKS LESS THAN {this.state.result.name.toUpperCase()}:
+
+                    {this.stockLessThan("AAPL")}
+                    {this.stockLessThan("GOOG")}       
+                    {this.stockLessThan("FB")}
+                    {this.stockLessThan("DIDO")}    
+                </div>
+            )
+        };
+    }
+
+    stockLessThan(company)
+    {
+        if(this.state.search == 'lowest')
+        {
+
+            var params = 'stock/lowest/' + this.state.days + '/' + company;
+
+            axios.get("http://localhost:1337/" + params).then((data)=>{
+                console.log(data);
+                let compare = {...this.state.compare};
+                compare.name = data.data.symbol;
+                compare.price = data.data.data[data.data.data.length-1].open;
+                compare.volume = data.data.data[data.data.data.length-1].volume;    
+                this.setState({compare});
+            })
+
+            if(this.state.result.price <= this.state.compare.price)
+            {
+                return(
+                    <div>
+                        <Printtext company={this.state.compare}/>
+                        {company}
+                        <br/>
+                        <br/>
+                    </div>
+                )
+            }
+        }
     }
 
     render() {
@@ -75,8 +154,8 @@ export default class Statspage extends Component {
                         <option value="lowest">Lowest Stock</option>
                     </select>
 
-                    <br></br>
-                    <br></br>
+                    <br/>
+                    <br/>
 
                     {/* Search Bar */}
                     <input type="text" 
@@ -96,6 +175,8 @@ export default class Statspage extends Component {
                 <li>Average Stock of any Company (Past year)</li>
                 <li>Lowest Stock of Any Company (Past year)</li>
                 <li>List of Company IDs and Names with average stock less than lowest of any of the selected companies</li>
+            
+                {this.renderResults()}
             </div>
         )
     }
