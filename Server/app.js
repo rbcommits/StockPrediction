@@ -1,4 +1,4 @@
-const port = process.env.port || 1337
+const port = process.env.port || 1340
 
 const express = require("express"), expressLogging = require('express-logging'), logger = require('logops');
 const date = require("datejs");
@@ -11,6 +11,11 @@ const symbols = ["AAPL", "MSFT", "AABA", "ACN", "ADP", "FB", "AMZN", "GOOGL", "I
 const dbName = "stock_data"
 const dbConnection = "mongodb://raghav:pN98TwHxbGz6@ds046357.mlab.com:46357/stock_data"
 const cors = require('cors')
+
+// Predictions
+var CURRENT_PREDICTION
+var LONGTERM_PREDICTION
+
 
 //Start the schedular to fetch data every minute
 
@@ -77,7 +82,8 @@ app.get("/stock/highest/:days/:symbol", (req, res) => {
     var day = parseInt(days);
     var today = new Date();
     today.setDate(today.getDate() - day);
-    console.log("date is "+today)
+    var localeDay = today.toLocaleDateString()
+    console.log("\ndate is "+localeDay+"\n")
     
     MongoClient.connect(dbConnection, function(err, client) {
                 //assert.equal(null, err);
@@ -85,27 +91,24 @@ app.get("/stock/highest/:days/:symbol", (req, res) => {
               
                 const db = client.db(dbName);
               
-                // Insert a single document
-                 results =  db.collection("AAPL").find({date: {$gte: "2018-02-28T00:00:00.000Z"}}).sort({"close":-1}).limit(1).toArray(function(err, result) {
-                   
-                    if(err){
-                         console.log("ERROR");
-                     }
-                    console.log(JSON.stringify(result));
-                    client.close();
-                    });
-                  //db.collection('historical').insertOne(data, function(err, r) {
-                  //assert.equal(null, err);
-                  //assert.equal(1, r.insertedCount);
-                    //console.log("Succesfully added data for: " + req.params.symbol)
-                    //console.log("The highest stock price in past " +days+ " is"+results);
-                    //client.close();
+               
+            
+              results =  db.collection(sym+"historical").find({date: {$gte: localeDay}}).sort({high:-1}).limit(1).toArray(function(err, result) {
+                if(err){
+                    console.log("ERROR");
+                }
+               console.log(JSON.stringify(result));
+               client.close();
+               });
+            
+                
+            
                   });
+        
         //results
         res.send("Asked for results");
         
                 });
-
 
 
 app.get("/stock/lowest/:days/:symbol", (req, res) => {
@@ -115,31 +118,36 @@ app.get("/stock/lowest/:days/:symbol", (req, res) => {
     var day = parseInt(days);
     var today = new Date();
     today.setDate(today.getDate() - day);
-    console.log("date is "+today)
+    var localeDay = today.toLocaleDateString()
+    console.log("\ndate is "+localeDay+"\n")
+    
     MongoClient.connect(dbConnection, function(err, client) {
                 //assert.equal(null, err);
                 //console.log("Connected correctly to server");
-              
+                
                 const db = client.db(dbName);
-              
-                // Insert a single document
-                 results =  db.collection("AAPL").find({date: {$gte: "2018-03-01T00:00:00.000Z"}}).sort({"close":+1}).limit(10).toArray(function(err, result) {
-                     if(err){
-                         console.log("ERROR");
-                     }
-                    console.log(JSON.stringify(result));
-                    client.close();
+                
+                
+            
+                results =  db.collection(sym+"historical").find({date: {$gte: localeDay}}).sort({low:+1}).limit(1).toArray(function(err, result) {
+                if(err){
+                    console.log("ERROR");
+                }
+                console.log(JSON.stringify(result));
+                client.close();
+                });
+            
+                
+            
                     });
-                  //db.collection('historical').insertOne(data, function(err, r) {
-                  //assert.equal(null, err);
-                  //assert.equal(1, r.insertedCount);
-                    //console.log("Succesfully added data for: " + req.params.symbol)
-                    //console.log("The highest stock price in past " +days+ " is"+results);
-                    //client.close();
-                  });
+        
         //results
         res.send("Asked for results");
+        
                 });
+
+
+//.aggregate([{$group: {_id:null, pop: {$avg:"$murders"} } }])
 
     
 app.get("/stock/average/:days/:symbol", (req, res) => {
@@ -147,33 +155,63 @@ app.get("/stock/average/:days/:symbol", (req, res) => {
     var days = req.params.days
     var sym = req.params.symbol
     var day = parseInt(days);
+    var today = new Date();
+    today.setDate(today.getDate() - day);
+    var localeDay = today.toLocaleDateString()
+    console.log("\ndate is "+localeDay+"\n")
+    
     MongoClient.connect(dbConnection, function(err, client) {
                 //assert.equal(null, err);
                 //console.log("Connected correctly to server");
-              
+                
                 const db = client.db(dbName);
-              
-                // Insert a single document
-                 results =  db.collection("historical").aggregate([
-                     {$limit:365},
-                     {$group:{"_id":null,"avg":{$avg:"$close"}}}
-                     
-                    ]);
-                    if(err){
-                         console.log("ERROR");
-                     }
-                    console.log(JSON.stringify(result));
-                    client.close();
-                  //db.collection('historical').insertOne(data, function(err, r) {
-                  //assert.equal(null, err);
-                  //assert.equal(1, r.insertedCount);
-                    //console.log("Succesfully added data for: " + req.params.symbol)
-                    //console.log("The highest stock price in past " +days+ " is"+results);
-                    //client.close();
-                  });
+            
+                results =  db.collection(sym+"historical").aggregate([{$match: {date: {$gte: localeDay}}}, {$group: {_id:null, averagePrice: {$avg:"$close"} } }]).toArray(function(err, result) {
+                if(err){
+                    console.log("ERROR");
+                }
+                console.log(JSON.stringify(result));
+                client.close();
+                });
+            
+                    });
+        
         //results
         res.send("Asked for results");
+        
                 });
+
+
+app.get("/stock/currentpred/:symbol", (req, res) => {
+    var result
+    MongoClient.connect(dbConnection, function(err, client) {
+        const db = client.db(dbName);
+        result = CURRENT_PREDICTION
+        if(err){
+            console.log("ERROR");
+        }
+        console.log(JSON.stringify(result));
+        client.close();
+});
+
+app.get("/stock/longtermpred/:symbol", (req, res) => {
+    var result
+    MongoClient.connect(dbConnection, function(err, client) {
+        const db = client.db(dbName);
+        result = LONGTERM_PREDICTION
+        if(err){
+            console.log("ERROR");
+        }
+        console.log(JSON.stringify(result));
+        client.close();
+});
+
+app.get("/stock//:symbol", (req, res) => {
+    var results = LONGTERM_PREDICTION
+    
+    
+
+});
 
 
 /*
