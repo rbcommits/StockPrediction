@@ -6,6 +6,7 @@ import registerServiceWorker from './js/registerServiceWorker';
 import Header from './js/components/header'
 import Sidebar from './js/components/sidebar'
 import Statspage from './js/components/statspage'
+import History from './js/components/history'
 
 import styles from './css/styles.min.css'
 import bootstrap from './bootstrap/css/bootstrap.min.css'
@@ -31,6 +32,7 @@ ReactDOM.render(
                 <div class="col-md-12">
                     <p class="dashboard-greeting">Queries</p>
                     <Statspage/>
+                    {/*<History symbol={"AAPL"}/>*/}
                 </div>
             </div>
             <div class="row">
