@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import axios from 'axios'
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
+import {IEXClient} from 'iex-api'
+import * as _fetch from 'isomorphic-fetch'
 
 export default class History extends Component {
   constructor(props)
@@ -39,19 +41,16 @@ export default class History extends Component {
 
   updateSubmit(event)
   {
-      //var params = 'stock/symbol/' + this.state.symbol + '/date/' + this.state.from + '-' + this.state.to;
-      var params = 'stock/lowest/5/' + this.state.symbol;
+    const iex = new IEXClient(_fetch);
+    var promise = iex.stockQuote(this.state.symbol).then(
+      value => {
+        console.log(value);
+        
+        let result = {...this.state.result};
+        result.open = value.open;
+      }.bind(this));
 
-      axios.get("http://localhost:1337/" + params).then((data)=>{
-          console.log(data.data.data.length);
-          //let result = {...this.state.result};
-          //result.name = data.data.symbol;
-          //result.open = data.data.data[data.data.data.length-1].open;
-          //result.volume = data.data.data[data.data.data.length-1].volume;    
-          //this.setState({result});
-      })
-
-      event.preventDefault();
+    event.preventDefault();
   }
 
   render() {
