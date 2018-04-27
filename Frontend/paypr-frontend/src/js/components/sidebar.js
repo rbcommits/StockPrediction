@@ -5,12 +5,13 @@ import {connect} from 'react-redux'
 import data from '../../DB_dump/datalist.json'
 import Tempdata from '../../DB_dump/datalist.json'
 function Printtext(props) {
-
-    const company = props.company;
+    props = props.company
+    console.log(props.symbol)
+    const company = props.symbol;
     var color = "green"
     var arrow = "glyphicon glyphicon-chevron-up"
 
-    if (company.volume < 4000000) {
+    if (props.volume < 4000000) {
         color = "red"
         arrow = "glyphicon glyphicon-chevron-down"
     }
@@ -19,9 +20,9 @@ function Printtext(props) {
             <font color={color}>
                 <i className={arrow}></i>
             </font>
-            {company.name}
-            | | {company.volume}
-            | | ${company.price}
+            {props.symbol}
+            | | {props.volume}
+            | | ${props.price}
         </a>
     )
 }
@@ -30,15 +31,18 @@ export class Sidebar extends Component {
 
     constructor(props)
     {
+        
         super(props)
+        
         this.state = {
             search: '', // Default Search Bar Text,
-            data: {}
         };
     }
 
     componentDidMount = () => {
-        this.setState({data: Tempdata})
+        //console.log("in CDM")
+        //console.log(this.state)
+        //this.setState({data: Tempdata})
     }
 
     updateSearch(event) {
@@ -46,9 +50,12 @@ export class Sidebar extends Component {
     }
 
     render() {
-        var filteredData = data.filter((filter) => {
-            return filter
-                .name
+        console.log("In cons")
+        console.log(this.props.data)
+
+        var filteredData = this.props.data.filter((results) => {
+            return results
+                .symbol
                 .toLowerCase()
                 .indexOf(this.state.search.toLowerCase()) !== -1;
         });
@@ -84,7 +91,7 @@ export class Sidebar extends Component {
                             <div className="collapse navbar-collapse">
                                 <ul className="nav navbar-nav">
                                     {filteredData.map((dataMember) => {
-                                        return <li key={dataMember.name}> <Printtext  company={dataMember}/></li>
+                                        return <li key={dataMember.symbol}> <Printtext  company={dataMember}/></li>
                                         })
                                     }
                                 </ul>
@@ -98,11 +105,19 @@ export class Sidebar extends Component {
     }
 }
 
-const mapStateToProps = (state) => (
-    {}
-    //console.log(state)
-    
-)
+const mapStateToProps = (state) => {
+    //{
+    //    data: { aapl: state.aapl }
+    //}
+
+    console.log(state);
+    var data = []
+    var stock_data = state.stock_state
+    state.stock_state.symbols.forEach((symbol)=>{
+        data.push({ symbol: symbol, price: stock_data[symbol].price, volume: stock_data[symbol].volume })
+    })
+    return {data: data}
+}
 
 const mapDispatchToProps = {}
 

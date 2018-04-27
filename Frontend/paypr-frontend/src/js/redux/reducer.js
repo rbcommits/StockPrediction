@@ -6,6 +6,7 @@ import {sessionService} from 'redux-react-session';
 // would like to combine them using combineReducers.
 const defaultState = {
   logged_in: false,
+  symbols: ["AAPL","MSFT","AABA","ACN","ADP","FB","AMZN","GOOGL","IBM","LMT"],
   AAPL: {},
   MSFT: {},
   AABA: {},
@@ -39,21 +40,13 @@ const stock_state = (state = [], action) => {
   switch (action.type) {
 
     case 'UPDATE_STOCK':
-    console.log("Update stock action called")
-    console.log(action)
-    switch(action.symbol) {
-      case "AAPL":
-      console.log("in apple")
-      return {
+    //console.log("In update stick")
+    //console.log(action)
+    return {
         ...state,
-        AAPL: {}
+        [action.symbol]: { symbol: action.symbol, timestamp: action.timestamp, price: action.price, volume: action.volume }
       }
-    }
-    return{
-      ...state,
-      
-      data: action.data
-    }
+
     default:
       return defaultState
   }

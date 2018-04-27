@@ -52,6 +52,9 @@ def write_to_kafka(data):
     producer.send(data['symbol'], data)
 
 
+i = 0
+
+
 class Namespace(BaseNamespace):
     def on_connect(self, *data):
         print('conneced')
@@ -60,11 +63,14 @@ class Namespace(BaseNamespace):
         print('disconnected')
 
     def on_message(self, data):
+        global i
         data = tryJSON(data)
         predicted_price = predict(data)
         data['nextPredictedPrice'] = predicted_price
-        print(data['lastSalePrice'])
+        print(str(data['lastSalePrice']), " ", i)
         write_to_kafka(data)
+        if data['symbol'] == "AAPL":
+            i+=1
         ''' Call all pyspark related functions here!! '''
 
 
@@ -72,13 +78,6 @@ class Namespace(BaseNamespace):
 namespace = socketIO.define(Namespace, '/1.0/tops')
 #namespace.emit('subscribe', 'AAPL')
 
-while True:
-    data = tryJSON( ' {"sector":"technologyhardwareequipment","seq":1,"askSize":0,"symbol":"AAPL","nextPredictedPrice":4.1145949667,"securityType":"commonstock","lastSaleTime":0,"volume":0,"lastSalePrice":0.0,"lastSaleSize":0,"bidPrice":0.0,"lastUpdated":1524828866827,"marketPercent":0.0,"bidSize":0,"askPrice":0.0} ' )
-    predicted_price = predict(data)
-    data['nextPredictedPrice'] = predicted_price
-    print(data['lastSalePrice'])
-    write_to_kafka(data)
-    time.sleep(1)
     
 #loop for testing purpose only!
 for symbol in SYMBOLS:

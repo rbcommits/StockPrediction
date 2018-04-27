@@ -28,6 +28,7 @@ const middleware = applyMiddleware(promise(), thunk);
 const store = createStore(rootReducer, middleware);
 const server_websocket = initSocketListener(symbols, (symbol_data)=> {
     store.dispatch(UpdateStock(symbol_data))
+
 })
 
 export default store;
