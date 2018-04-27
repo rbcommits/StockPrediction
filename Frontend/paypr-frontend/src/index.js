@@ -14,6 +14,12 @@ import styles from './css/styles.min.css'
 import store from './js/redux/store';
 import {Provider} from "react-redux";
 import StockCard from './js/components/stock-card'
+
+var symbols = ["AAPL", "MSFT", "AABA", "ACN", "ADP", "FB", "AMZN", "GOOGL", "IBM", "LMT"]
+stock_cards = []
+symbols.forEach((symbol)=>{
+    stock_cards.push(<StockCard {symbol=symbol}/>)
+})
 ReactDOM.render(
 
 <Provider store={store}>
@@ -25,7 +31,7 @@ ReactDOM.render(
         <Sidebar />
         <div className="col-md-6 col-md-fill" style={{padding:"0px"}}>
             {/* Google cards and other queries pages go here */}
-            <StockCard />
+            { stock_cards }
         </div>
     </div>
 </div> </div>
