@@ -15,8 +15,8 @@ def train(company_name):
     data = np.load(name+"_data_20180423.npy")
     dataX = data[0:data.shape[0]-2]
     dataY = data[1:data.shape[0]-1]
-    plt.plot(dataX)
-    plt.show()
+    # plt.plot(dataX)
+    # plt.show()
 
     # Normalize data between 0 and 1
     scaler = MinMaxScaler(feature_range=(0, 1))
