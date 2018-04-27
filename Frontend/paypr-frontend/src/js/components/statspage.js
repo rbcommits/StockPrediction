@@ -4,15 +4,28 @@ import axios from 'axios'
 function Printtext(props){
 
     const company = props.company;
-  
-    return (
-        <div>
+
+    if(company.avgbool == 0)
+    {    
+        return (
+            <div>
+                    Company: {company.name} <br/>
+                    Date: {company.date} <br/>
+                    Volume: {company.volume} <br/>
+                    Open: {company.open} <br/>
+                    Close: {company.close} <br/>
+            </div>
+        )
+    }
+    else
+    {
+        return (
+            <div>
                 Company: {company.name} <br/>
-                Volume: {company.volume} <br/>
-                Price: ${company.price} <br/>
-                
-        </div>
-    )
+                Average: {company.open} <br/>
+            </div>
+        )
+    }
 }
 
 export default class Statspage extends Component {
@@ -27,13 +40,19 @@ export default class Statspage extends Component {
             data: '',
             result: { //Data from Server
                 name: "name",
-                price: "price",
-                volume: "volume"
+                date: "date",
+                open: "open",
+                close: "close",
+                volume: "volume",
+                avgbool: 0
             },
             compare: {//Data from Server when calculating stocks less than LOW
                 name: "name",
-                price: "price",
-                volume: "volume"
+                date: "date",
+                open: "open",
+                close: "close",
+                volume: "volume",
+                avgbool: 0
             },
             renderFlag: 0
         };
@@ -62,14 +81,32 @@ export default class Statspage extends Component {
     {
         var params = 'stock/' + this.state.search + '/' + this.state.days + '/' + this.state.symbol;
 
-        axios.get("http://localhost:1340/" + params).then((data)=>{
-            console.log(data);
-            let result = {...this.state.result};
-            result.name = data.data.symbol;
-            result.price = data.data.data[data.data.data.length-1].open;
-            result.volume = data.data.data[data.data.data.length-1].volume;    
-            this.setState({result});
-        })
+        if(this.state.search != 'average')
+        {
+            axios.get("http://localhost:1337/" + params).then((data)=>{
+                    console.log(data.data[0]);
+                    let result = {...this.state.result};
+                    result.name = this.state.symbol;
+                    result.open = data.data[0].open;
+                    result.close = data.data[0].close;
+                    result.date = data.data[0].date;
+                    result.volume = data.data[0].volume;
+                    result.avgbool = 0;
+                    this.setState({result});
+                })
+        }
+
+        else
+        {
+            axios.get("http://localhost:1337/" + params).then((data)=>{
+                    console.log(data.data[0]);
+                    let result = {...this.state.result};
+                    result.name = this.state.symbol;
+                    result.open = data.data[0].averagePrice;
+                    result.avgbool = 1;
+                    this.setState({result});
+                })
+        }
 
         this.setState({renderFlag: 1});
 
@@ -85,18 +122,8 @@ export default class Statspage extends Component {
                     <br/>
                     {this.state.search.toUpperCase()}: <Printtext company={this.state.result}/>
 
-                    {this.renderLessThanTitle}
-                    
-                    {this.stockLessThan("AAPL")}
-                    {this.stockLessThan("MSFT")}       
-                    {this.stockLessThan("AABA")}
-                    {this.stockLessThan("ACN")}
-                    {this.stockLessThan("ADP")}
-                    {this.stockLessThan("FB")}
-                    {this.stockLessThan("AMZN")} 
-                    {this.stockLessThan("GOOG")}       
-                    {this.stockLessThan("IBM")}
-                    {this.stockLessThan("LMT")}                         
+                    {this.renderLessThanTitle()}
+                                             
                 </div>
             )
         };
@@ -110,6 +137,15 @@ export default class Statspage extends Component {
                 <div>
                     <br/>
                     AVERAGE STOCKS LESS THAN {this.state.result.name.toUpperCase()}:                  
+                    {this.stockLessThan("AAPL")}
+                    {this.stockLessThan("MSFT")}       
+                    {this.stockLessThan("AABA")}
+                    {this.stockLessThan("ACN")}
+                    {this.stockLessThan("ADP")}
+                    {this.stockLessThan("FB")}
+                    {this.stockLessThan("AMZN")} 
+                    {this.stockLessThan("IBM")}
+                    {this.stockLessThan("LMT")}
                 </div>
             )
         }
@@ -120,25 +156,20 @@ export default class Statspage extends Component {
         if(this.state.search == 'lowest')
         {
 
-            var params = 'stock/lowest/' + this.state.days + '/' + company;
+            var params = 'stock/average/' + this.state.days + '/' + company;
 
-            axios.get("http://localhost:1340/" + params).then((data)=>{
+            axios.get("http://localhost:1337/" + params).then((data)=>{
                 console.log(data);
                 let compare = {...this.state.compare};
-                compare.name = data.data.symbol;
-                compare.price = data.data.data[data.data.data.length-1].open;
-                compare.volume = data.data.data[data.data.data.length-1].volume;    
+                compare.open = data.data[0].averagePrice;    
                 this.setState({compare});
             })
 
-            if(this.state.result.price < this.state.compare.price)
+            if(this.state.result.open > this.state.compare.open)
             {
                 return(
                     <div>
-                        <Printtext company={this.state.compare}/>
-                        {company}
-                        <br/>
-                        <br/>
+                        <li>{company}: {this.state.compare.open}</li>
                     </div>
                 )
             }

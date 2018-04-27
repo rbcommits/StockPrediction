@@ -3,24 +3,24 @@ import ujson
 import random
 from kafka import KafkaProducer
 import time
-#import RNN
-#import svm
+import RNN
+import svm
 
 _SIO_URL_PREFIX = 'https://ws-api.iextrading.com'
 _SIO_PORT = 443
 SYMBOLS = ["AAPL", "MSFT", "AABA", "ACN", "ADP", "FB", "AMZN", "GOOGL", "IBM", "LMT"]
 
-
-
 producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092', value_serializer=lambda v: ujson.dumps(v).encode('utf-8'))
 socketIO = SocketIO(_SIO_URL_PREFIX, _SIO_PORT)
-#socketIO.define(LoggingNamespace, path='/1.0/tops')
+
+
+# socketIO.define(LoggingNamespace, path='/1.0/tops')
 
 
 def predict(data):
-    ''' 
-    dummy pyspark function. Use as wrapper and add all predictions here 
-    
+    '''
+    dummy pyspark function. Use as wrapper and add all predictions here
+
     data: dict object of the form:
     {
         symbol: ,
@@ -37,17 +37,14 @@ def predict(data):
         sector:
         securityType:
 
-    } These values are all unicode strings! parse to int/float as needed 
+    } These values are all unicode strings! parse to int/float as needed
     '''
 
     x = data["lastSalePrice"]
 
-
-
-
-
     predicted_price = float(data['lastSalePrice'])
-    return random.uniform(predicted_price - 15, predicted_price + 15) # for now just return random value. Should Return predicted price
+    return random.uniform(predicted_price - 15,
+                          predicted_price + 15)  # for now just return random value. Should Return predicted price
 
 
 def predict_historical(data, days_ahead):
@@ -85,9 +82,6 @@ def write_to_kafka(data):
     producer.send(data['symbol'], data)
 
 
-i = 0
-
-
 class Namespace(BaseNamespace):
     def on_connect(self, *data):
         print('conneced')
@@ -96,28 +90,29 @@ class Namespace(BaseNamespace):
         print('disconnected')
 
     def on_message(self, data):
-        global i
         data = tryJSON(data)
         predicted_price = predict(data)
         data['nextPredictedPrice'] = predicted_price
-        print(str(data['lastSalePrice']), " ", i)
-        write_to_kafka(data)
-        if data['symbol'] == "AAPL":
-            i+=1
+        print(data['lastSalePrice'])
+        #write_to_kafka(data)
         ''' Call all pyspark related functions here!! '''
 
 
-
 namespace = socketIO.define(Namespace, '/1.0/tops')
-#namespace.emit('subscribe', 'AAPL')
+# namespace.emit('subscribe', 'AAPL')
 
-    
-#loop for testing purpose only!
+while True:
+    data = tryJSON(
+        ' {"sector":"technologyhardwareequipment","seq":1,"askSize":0,"symbol":"AAPL","nextPredictedPrice":4.1145949667,"securityType":"commonstock","lastSaleTime":0,"volume":0,"lastSalePrice":0.0,"lastSaleSize":0,"bidPrice":0.0,"lastUpdated":1524828866827,"marketPercent":0.0,"bidSize":0,"askPrice":0.0} ')
+    predicted_price = predict(data)
+    data['nextPredictedPrice'] = predicted_price
+    print(data['lastSalePrice'])
+    write_to_kafka(data)
+    time.sleep(1)
+
+# loop for testing purpose only!
 for symbol in SYMBOLS:
     namespace.emit('subscribe', symbol)
     print("subscribed to ", symbol)
-
-
-
 
 socketIO.wait()

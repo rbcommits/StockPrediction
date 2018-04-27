@@ -1,4 +1,5 @@
 from keras.models import Sequential
+from keras.models import load_model
 from keras.layers import Dense, Activation
 from keras.layers import LSTM
 import numpy as np
@@ -54,45 +55,60 @@ def train(company_name):
     trainPredict = model.predict(train_dataX)
     testPredict = model.predict(test_dataX)
 
-    plt.plot(testPredict)
-    plt.plot(test_dataY)
-    plt.show()
+    print("Error: ", np.average(abs(test_dataY - testPredict)))
+
+    # plt.plot(testPredict)
+    # plt.plot(test_dataY)
+    # plt.show()
 
     # Save model
-    model.save('accenture_model')
+    model.save(company_name+'_model')
 
 
+def predict(symbol, data):
 
+    sym_to_name = {"ACN": "accenture", "ADP": "adp", "AABA": "altaba", "AMZN": "amazon", "AAPL": "apple", "FB": "facebook",
+                   "GOOGL": "google", "IBM": "ibm", "LMT": "locheed", "MSFT": "msft"}
+
+    model = load_model(sym_to_name[symbol]+"_model")
+    scaler = MinMaxScaler(feature_range=(0, 1))
+    dataX = [[d] for d in data]
+    scaled_dataX = scaler.fit_transform(dataX)
+    scaled_dataX = [[d] for d in scaled_dataX]
+
+    scaled_prediction = model.predict(scaled_dataX)
+    prediction = scaler.inverse_transform(scaled_prediction)
+    return prediction
 
 
 # ACCENTURE
-train_and_predict("accenture")
+train("accenture")
 
 # ADP
-train_and_predict("adp")
+train("adp")
 
 # ALTABA
-train_and_predict("altaba")
+train("altaba")
 
 # AMAZON
-train_and_predict("amazon")
+train("amazon")
 
 # APPLE
-train_and_predict("apple")
+train("apple")
 
 # FACEBOOK
-train_and_predict("facebook")
+train("facebook")
 
 # GOOGLE
-train_and_predict("google")
+train("google")
 
 # IBM
-train_and_predict("ibm")
+train("ibm")
 
 # LOCKHEED
-train_and_predict("lockheed")
+train("lockheed")
 
 # MICROSOFT
-train_and_predict("msft")
+train("msft")
 
 
