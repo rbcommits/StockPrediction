@@ -85,13 +85,12 @@ app.get("/stock/highest/:days/:symbol", (req, res) => {
                     console.log("ERROR");
                 }
                 console.log(JSON.stringify(result));
+                //results
+                res.send(result);
                 client.close();
             });
 
     });
-
-    //results
-    res.send("Asked for results");
 
 });
 
@@ -126,13 +125,14 @@ app.get("/stock/lowest/:days/:symbol", (req, res) => {
                     console.log("ERROR");
                 }
                 console.log(JSON.stringify(result));
+                //results
+                res.send(result);
                 client.close();
             });
 
     });
 
-    //results
-    res.send("Asked for results");
+
 
 });
 
@@ -176,13 +176,13 @@ app.get("/stock/average/:days/:symbol", (req, res) => {
                     console.log("ERROR");
                 }
                 console.log(JSON.stringify(result));
+                //results
+                res.send(result);
                 client.close();
             });
 
     });
 
-    //results
-    res.send("Asked for results");
 
 });
 
