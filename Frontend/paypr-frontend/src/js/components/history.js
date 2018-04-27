@@ -4,8 +4,6 @@ import { connect } from 'react-redux'
 import axios from 'axios'
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
-import {IEXClient} from 'iex-api'
-import * as _fetch from 'isomorphic-fetch'
 
 export default class History extends Component {
   constructor(props)
@@ -13,46 +11,47 @@ export default class History extends Component {
       super(props)
       this.state = {
         symbol: this.props.symbol,
-        from: 'YearMonthDay as Number',
-        to: 'YearMonthDay as Number',        
-        result: [{ //Data from Server
-          name: this.props.symbol,
-          open: "",
-          close: "",
-          volume: "",
-          high: "",
-          low: "",
-          date: ""
-        }]
+        search: '1y',      
+        result: [{}]
       };
 
       this.updateSubmit = this.updateSubmit.bind(this);
   }
 
-  updateFrom(event)
+  updateSearch(event)
   {
-      this.setState({from: event.target.value});
+      this.setState({search: event.target.value});
   }
 
-  updateTo(event)
-  {
-      this.setState({to: event.target.value});
-  }
 
-  /*Incomplete*/
   updateSubmit(event)
   {
-    const iex = new IEXClient(_fetch);
-    var promise = iex.stockQuote(this.state.symbol).then(
-      value => {
+    this.setState({result: []});
 
-        console.log(value);
-        
-        //let result = {...this.state.result};
-        //result.open = value.open;  
-        //this.setState({result});
+    axios.get("https://api.iextrading.com/1.0/stock/"+this.state.symbol+"/chart/"+this.state.search).then((data)=>{
+        console.log(data.data);
 
-      });
+        var temp = this.state.result.slice();
+
+        for(var i=0; i<data.data.length; i++)
+        {
+          temp.push(
+            {
+              name: this.state.symbol,
+              open: data.data[i].open,
+              close: data.data[i].close,
+              volume: data.data[i].volume,
+              high: data.data[i].high,
+              low: data.data[i].low,
+              date: data.data[i].date
+            }
+
+          ); 
+        }
+
+        this.setState({result: temp});
+
+    })
 
     event.preventDefault();
   }
@@ -88,28 +87,18 @@ export default class History extends Component {
 
           {/* Number Search Bar */}
           View Historical Data from: {' '}
-          <input type="numbers" 
-              style = {{
-                  color: "grey"
-              }}
 
-              pattern = "[0-9]*"
-              inputmode = "numeric"
-              value = {this.state.from}
-              onChange = {this.updateFrom.bind(this)}
-          />
-
-          {' '} to: {' '}
-          <input type="numbers" 
-              style = {{
-                  color: "grey"
-              }}
-
-              pattern = "[0-9]*"
-              inputmode = "numeric"
-              value = {this.state.to}
-              onChange = {this.updateTo.bind(this)}
-          />
+          {/* Dropdown Menu */}
+          <select name="stock" value = {this.state.search} onChange = {this.updateSearch.bind(this)}>
+              <option value="1y">1 Year</option>
+              <option value="2y">2 Years</option>
+              <option value="5y">5 Years</option>
+              <option value="1m">1 Month</option>
+              <option value="3m">2 Months</option>
+              <option value="6m">6 Months</option>
+              <option value="1d">1 Day</option>
+          </select>
+          {' '} ago {' '}              
 
 
           {/* Submit Button */}
