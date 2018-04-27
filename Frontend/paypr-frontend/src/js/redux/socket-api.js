@@ -1,10 +1,23 @@
-import socketIOClient from 'socket.io-client'
+var socket = require('socket.io-client')('http://localhost:1337');
 
 
-const socket = socketIOClient("localhost:3030")
 
-export default function initSocketListener(){
-    socket.on("LiveStockPrice", (data)=> {
-        
-    })
+function initSocketListener(){
+    socket.on('connect', function(){
+        console.log("Connected to server")
+        socket.emit('subscribe', 'AAPL')
+        console.log('subscribed to aapl')
+    });
 }
+
+
+function subscribe(symbol){
+    socket.emit('subscribe', 'AAPL');
+}
+
+initSocketListener()
+
+socket.on("message", function(data){
+    console.log("got message")
+    console.log(data)
+})
