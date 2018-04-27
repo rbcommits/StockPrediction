@@ -78,7 +78,7 @@ def predict(symbol, data):
 
     scaled_prediction = model.predict(scaled_dataX)
     prediction = scaler.inverse_transform(scaled_prediction)
-    return prediction
+    return prediction[len(prediction) - 1]
 
 
 # # ACCENTURE
