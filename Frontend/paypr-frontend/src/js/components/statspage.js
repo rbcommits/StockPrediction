@@ -10,7 +10,7 @@ function Printtext(props){
         return (
             <div>
                     Company: {company.name} <br/>
-                    Date: {company.date} <br/>
+                    {/*Date: {company.date} <br/>*/}
                     Volume: {company.volume} <br/>
                     Open: {company.open} <br/>
                     Close: {company.close} <br/>
@@ -121,8 +121,6 @@ export default class Statspage extends Component {
                 <div>
                     <br/>
                     {this.state.search.toUpperCase()}: <Printtext company={this.state.result}/>
-
-                    {this.renderLessThanTitle()}
                                              
                 </div>
             )
@@ -158,18 +156,20 @@ export default class Statspage extends Component {
 
             var params = 'stock/average/' + this.state.days + '/' + company;
 
+            var avg = 0;
             axios.get("http://localhost:1337/" + params).then((data)=>{
-                console.log(data);
-                let compare = {...this.state.compare};
-                compare.open = data.data[0].averagePrice;    
-                this.setState({compare});
+                //console.log(data);
+                //let compare = {...this.state.compare};
+                //compare.open = data.data[0].averagePrice;    
+                //this.setState({compare});
+                this.setState({avg: data.data[0].averagePrice});
             })
-
-            if(this.state.result.open > this.state.compare.open)
+            console.log(avg)
+            if(this.state.result.open > this.state.avg)
             {
                 return(
                     <div>
-                        <li>{company}: {this.state.compare.open}</li>
+                        <li>{company}: {this.state.avg}</li>
                     </div>
                 )
             }
@@ -220,12 +220,7 @@ export default class Statspage extends Component {
                     {/* Submit Button */}
                     <input type="submit" value="Submit"/> 
                 </form>
-
-                <li>Highest Stock of Any Company (Past 10 Days)</li>
-                <li>Average Stock of any Company (Past year)</li>
-                <li>Lowest Stock of Any Company (Past year)</li>
-                <li>List of Company IDs and Names with average stock less than lowest of any of the selected companies</li>
-            
+        
                 {this.renderResults()}
             </div>
         )
