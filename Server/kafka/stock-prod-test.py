@@ -5,6 +5,7 @@ from kafka import KafkaProducer
 import time
 import RNN
 import svm
+import bayes
 
 _SIO_URL_PREFIX = 'https://ws-api.iextrading.com'
 _SIO_PORT = 443
@@ -41,10 +42,18 @@ def predict(data):
     '''
 
     x = data["lastSalePrice"]
+    sym = data["symbol"]
 
-    predicted_price = float(data['lastSalePrice'])
-    return random.uniform(predicted_price - 15,
-                          predicted_price + 15)  # for now just return random value. Should Return predicted price
+    # Ensemble methods
+    bayes_pred = bayes.main()
+    RNN_pred = RNN.predict(sym, x)
+
+    final_pred = 0.0001*bayes_pred + 0.999*RNN_pred
+
+    # predicted_price = float(data['lastSalePrice'])
+    # return random.uniform(predicted_price - 15,
+    #                       predicted_price + 15)  # for now just return random value. Should Return predicted price
+    return final_pred
 
 
 def predict_historical(data, days_ahead):
@@ -64,11 +73,11 @@ def predict_historical(data, days_ahead):
     } These values are all unicode strings! parse to int/float as needed
     '''
 
-    # x = data["close"]
-    # symbol = data["symbol"]
-    # prediction = svm.predict(symbol, days_ahead, x)
-    #
-    # return prediction
+    x = data["close"]
+    symbol = data["symbol"]
+    prediction = svm.predict(symbol, days_ahead, x)
+
+    return prediction
 
 
 def tryJSON(data):

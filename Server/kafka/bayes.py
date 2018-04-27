@@ -72,7 +72,7 @@ def main():
     for file in os.listdir("stock_data/"):
         plt.figure()
         print("Prediction for %s" % (file.replace(".csv", "")))
-        training, targets, actual_price = read_stock("stock_data/%s"%file)
+        training, targets = [1, 1], [1, 1]
         training, targets, norm = normalize_data(training, targets)
 
         prediction, _ = estimate(training, targets, norm)
@@ -97,6 +97,7 @@ def demo():
     plt.scatter(1.02, n_prediction, color='r')
     print("Predicted Price: ", prediction)
     plt.show()
+
 if __name__ == '__main__':
     #main()
     demo()

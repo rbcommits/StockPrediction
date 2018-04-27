@@ -74,6 +74,9 @@ def predict_historical(data, days_ahead):
     # return prediction
 
 
+
+
+
 def tryJSON(data):
     try:
         return ujson.loads(data)
