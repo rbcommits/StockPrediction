@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 def train(company_name):
     name = company_name
-    data = np.load(name+"_data_20180423.npy")
+    data = np.load(name+"_data_20180425.npy")
     dataX = data[0:data.shape[0]-2]
     dataY = data[1:data.shape[0]-1]
     # plt.plot(dataX)
@@ -81,32 +81,32 @@ def predict(symbol, data):
     return prediction
 
 
-# ACCENTURE
-train("accenture")
-
-# ADP
-train("adp")
-
-# ALTABA
-train("altaba")
-
-# AMAZON
-train("amazon")
-
-# APPLE
-train("apple")
-
-# FACEBOOK
-train("facebook")
-
-# GOOGLE
-train("google")
-
-# IBM
-train("ibm")
-
-# LOCKHEED
-train("lockheed")
+# # ACCENTURE
+# train("accenture")
+#
+# # ADP
+# train("adp")
+#
+# # ALTABA
+# train("altaba")
+#
+# # AMAZON
+# train("amazon")
+#
+# # APPLE
+# train("apple")
+#
+# # FACEBOOK
+# train("facebook")
+#
+# # GOOGLE
+# train("google")
+#
+# # IBM
+# train("ibm")
+#
+# # LOCKHEED
+# train("lockheed")
 
 # MICROSOFT
 train("msft")
