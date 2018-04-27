@@ -109,6 +109,10 @@ def predict(symbol, data):
 # train("lockheed")
 
 # MICROSOFT
-train("msft")
+# train("msft")
+
+'''TESTING'''
+lock_data = [322.9, 323.17, 323.08, 323.08, 323.23, 323.69, 323.63, 323.83, 323.94, 323.9]
+print(predict("LMT", lock_data))
 
 
