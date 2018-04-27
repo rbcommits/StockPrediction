@@ -2,12 +2,22 @@ var socket = require('socket.io-client')('http://localhost:1337');
 
 
 
-function initSocketListener(){
+function initSocketListener(symbols, cb){
+    var socket = require('socket.io-client')('http://localhost:1337');
     socket.on('connect', function(){
         console.log("Connected to server")
-        socket.emit('subscribe', 'AAPL')
-        console.log('subscribed to aapl')
+        symbols.forEach( (symbol)=> {
+            socket.emit('subscribe', symbol)
+        } )
+        console.log("subscribed to " + symbols)
     });
+
+    socket.on("message", function(data){
+        if(cb)
+        {
+            cb( data )
+        }
+    })
 }
 
 
@@ -15,9 +25,7 @@ function subscribe(symbol){
     socket.emit('subscribe', 'AAPL');
 }
 
-initSocketListener()
-
-socket.on("message", function(data){
-    console.log("got message")
-    console.log(data)
-})
+module.exports = {
+    initSocketListener,
+    subscribe
+}

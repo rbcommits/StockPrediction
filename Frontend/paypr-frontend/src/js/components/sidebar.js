@@ -98,7 +98,11 @@ export class Sidebar extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => (
+    {}
+    //console.log(state)
+    
+)
 
 const mapDispatchToProps = {}
 

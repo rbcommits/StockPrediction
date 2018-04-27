@@ -18,6 +18,11 @@
     "mongodb": "^3.0.7",
     "node-schedule": "^1.3.0",
     "socket.io": "^2.1.0",
-    "yahoo-finance": "^0.3.5"
+    "yahoo-finance": "^0.3.5",
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "kafka-node": "^2.4.1",
+    "kafka-streams": "^3.0.0",
+    "log4bro": "^3.4.0"
   }
 }

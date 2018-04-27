@@ -39,11 +39,14 @@ const stock_state = (state = [], action) => {
   switch (action.type) {
 
     case 'UPDATE_STOCK':
+    console.log("Update stock action called")
+    console.log(action)
     switch(action.symbol) {
       case "AAPL":
+      console.log("in apple")
       return {
         ...state,
-        AAPL: {timestamp: action.timestamp,price: action.price, volume: action.volume}
+        AAPL: {}
       }
     }
     return{
