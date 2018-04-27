@@ -68,7 +68,7 @@ def train(company_name):
 def predict(symbol, data):
 
     sym_to_name = {"ACN": "accenture", "ADP": "adp", "AABA": "altaba", "AMZN": "amazon", "AAPL": "apple", "FB": "facebook",
-                   "GOOGL": "google", "IBM": "ibm", "LMT": "locheed", "MSFT": "msft"}
+                   "GOOGL": "google", "IBM": "ibm", "LMT": "lockheed", "MSFT": "msft"}
 
     model = load_model(sym_to_name[symbol]+"_model")
     scaler = MinMaxScaler(feature_range=(0, 1))
