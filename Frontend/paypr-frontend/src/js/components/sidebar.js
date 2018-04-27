@@ -6,7 +6,6 @@ import data from '../../DB_dump/datalist.json'
 import Tempdata from '../../DB_dump/datalist.json'
 function Printtext(props) {
     props = props.company
-    console.log(props.symbol)
     const company = props.symbol;
     var color = "green"
     var arrow = "glyphicon glyphicon-chevron-up"

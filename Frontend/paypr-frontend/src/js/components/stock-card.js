@@ -35,9 +35,13 @@ export class StockCard extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-
-})
+const mapStateToProps = (state) => {
+console.log("In stock-card mstp")
+console.log(state)
+return{
+    
+}
+}
 
 const mapDispatchToProps = {
   

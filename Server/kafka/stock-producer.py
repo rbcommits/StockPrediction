@@ -3,8 +3,8 @@ import ujson
 import random
 from kafka import KafkaProducer
 import time
-import RNN
-import svm
+#import RNN
+#import svm
 
 _SIO_URL_PREFIX = 'https://ws-api.iextrading.com'
 _SIO_PORT = 443
