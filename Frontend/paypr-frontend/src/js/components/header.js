@@ -3,42 +3,33 @@ import React, { Component } from 'react'
 export default class Header extends Component {
   render() {
     return (
-        <div class="row">
-        <div class="col-md-12">
-            <nav class="navbar navbar-default">
-                <div class="container-fluid">
-                    <div class="navbar-header">
-                        <a class="navbar-brand hidden" href="a"> </a>
-                        <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navcol-1">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                    </div>
-                    <div class="collapse navbar-collapse" id="navcol-1">
-                        <ul class="nav navbar-nav main-nav">
-                            <li role="presentation">
-                                <a href="a" id="home">Home </a>
-                            </li>
-                            <li role="presentation">
-                                <a href="a">About </a>
-                            </li>
-                            <li role="presentation">
-                                <a href="a">Contact </a>
-                            </li>
-                            <li role="presentation">
-                                <a href="a">Sitemap </a>
-                            </li>
-                            <li role="presentation">
-                                <a href="a">Declaimer </a>
-                            </li>
-                        </ul>
-                    </div>
+        <div className="row" style={{margin: "0px"}}>
+                <div className="col-md-12" style={{padding:"0px"}}>
+                    <nav className="navbar navbar-default custom-header">
+                        <div className="container-fluid">
+                            <div className="navbar-header"><a className="navbar-brand" href="REPLACE_LINKK"><img className="img-responsive header-logo" src="assets/img/KD-White.png" width="auto" height="auto" /><span className="header-span" >PayPr</span>  </a>
+                                <button className="navbar-toggle collapsed" data-toggle="collapse" data-target="REPLACE_LINKKnavbar-collapse"><span className="sr-only">Toggle navigation</span><span className="icon-bar"></span><span className="icon-bar"></span><span className="icon-bar"></span></button>
+                            </div>
+                            <div className="collapse navbar-collapse" id="navbar-collapse">
+                                <ul className="nav navbar-nav links">
+                                    <li role="presentation"><a href="REPLACE_LINKK">Overview </a></li>
+                                    <li role="presentation"><a href="REPLACE_LINKK">Surveys </a></li>
+                                    <li role="presentation"><a href="REPLACE_LINKK"> Reports</a></li>
+                                </ul>
+                                <ul className="nav navbar-nav navbar-right">
+                                    <li className="dropdown"><a className="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="REPLACE_LINKK"> <span className="caret"></span><img src="assets/img/avatar.jpg" className="dropdown-image" /></a>
+                                        <ul className="dropdown-menu dropdown-menu-right" role="menu">
+                                            <li role="presentation"><a href="REPLACE_LINKK">Settings </a></li>
+                                            <li role="presentation"><a href="REPLACE_LINKK">Payments </a></li>
+                                            <li role="presentation" className="active"><a href="REPLACE_LINKK">Logout </a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
                 </div>
-            </nav>
-        </div>
-    </div>
+            </div>
     )
   }
 }
