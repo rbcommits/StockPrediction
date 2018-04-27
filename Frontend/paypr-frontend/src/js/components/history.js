@@ -39,16 +39,20 @@ export default class History extends Component {
       this.setState({to: event.target.value});
   }
 
+  /*Incomplete*/
   updateSubmit(event)
   {
     const iex = new IEXClient(_fetch);
     var promise = iex.stockQuote(this.state.symbol).then(
       value => {
+
         console.log(value);
         
-        let result = {...this.state.result};
-        result.open = value.open;
-      }.bind(this));
+        //let result = {...this.state.result};
+        //result.open = value.open;  
+        //this.setState({result});
+
+      });
 
     event.preventDefault();
   }
