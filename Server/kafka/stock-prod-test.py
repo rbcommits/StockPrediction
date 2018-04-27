@@ -6,6 +6,7 @@ import time
 import RNN
 import svm
 import bayes
+import indicators
 
 _SIO_URL_PREFIX = 'https://ws-api.iextrading.com'
 _SIO_PORT = 443
@@ -78,6 +79,21 @@ def predict_historical(data, days_ahead):
     prediction = svm.predict(symbol, days_ahead, x)
 
     return prediction
+
+def get_indicators(data):
+    '''
+    :param data: 1D list of prices (live or historical)
+    :return: 3 x 1 list, each row for each indicator
+    '''
+
+    results = []
+    results.append(indicators.get_indicator(data, "ema"))
+    results.append(indicators.get_indicator(data, "macd"))
+    results.append(indicators.get_indicator(data, "rsi"))
+
+    return results
+
+
 
 
 def tryJSON(data):
