@@ -3,6 +3,8 @@ import ujson
 import random
 from kafka import KafkaProducer
 import time
+import RNN
+import svm
 
 _SIO_URL_PREFIX = 'https://ws-api.iextrading.com'
 _SIO_PORT = 443
@@ -37,8 +39,39 @@ def predict(data):
 
     } These values are all unicode strings! parse to int/float as needed 
     '''
+
+    x = data["lastSalePrice"]
+
+
+
+
+
     predicted_price = float(data['lastSalePrice'])
     return random.uniform(predicted_price - 15, predicted_price + 15) # for now just return random value. Should Return predicted price
+
+
+def predict_historical(data, days_ahead):
+    '''
+    dummy pyspark function. Use as wrapper and add all predictions here
+
+    data: dict object of the form:
+    {
+        symbol:
+        date:
+        open:
+        high:
+        low:
+        close:
+        volume:
+
+    } These values are all unicode strings! parse to int/float as needed
+    '''
+
+    x = data["close"]
+    symbol = data["symbol"]
+    prediction = svm.predict(symbol, days_ahead, x)
+
+    return prediction
 
 
 def tryJSON(data):
