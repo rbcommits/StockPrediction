@@ -62,7 +62,7 @@ export default class Statspage extends Component {
     {
         var params = 'stock/' + this.state.search + '/' + this.state.days + '/' + this.state.symbol;
 
-        axios.get("http://localhost:1337/" + params).then((data)=>{
+        axios.get("http://localhost:1340/" + params).then((data)=>{
             console.log(data);
             let result = {...this.state.result};
             result.name = data.data.symbol;
@@ -84,18 +84,37 @@ export default class Statspage extends Component {
                 <div>
                     <br/>
                     {this.state.search.toUpperCase()}: <Printtext company={this.state.result}/>
-                    <br/>
-                    AVERAGE STOCKS LESS THAN {this.state.result.name.toUpperCase()}:
 
+                    {this.renderLessThanTitle}
+                    
                     {this.stockLessThan("AAPL")}
-                    {this.stockLessThan("GOOG")}       
+                    {this.stockLessThan("MSFT")}       
+                    {this.stockLessThan("AABA")}
+                    {this.stockLessThan("ACN")}
+                    {this.stockLessThan("ADP")}
                     {this.stockLessThan("FB")}
-                    {this.stockLessThan("DIDO")}    
+                    {this.stockLessThan("AMZN")} 
+                    {this.stockLessThan("GOOG")}       
+                    {this.stockLessThan("IBM")}
+                    {this.stockLessThan("LMT")}                         
                 </div>
             )
         };
     }
 
+    renderLessThanTitle()
+    {
+        if(this.state.search == 'lowest')
+        {
+            return(
+                <div>
+                    <br/>
+                    AVERAGE STOCKS LESS THAN {this.state.result.name.toUpperCase()}:                  
+                </div>
+            )
+        }
+
+    }
     stockLessThan(company)
     {
         if(this.state.search == 'lowest')
@@ -103,7 +122,7 @@ export default class Statspage extends Component {
 
             var params = 'stock/lowest/' + this.state.days + '/' + company;
 
-            axios.get("http://localhost:1337/" + params).then((data)=>{
+            axios.get("http://localhost:1340/" + params).then((data)=>{
                 console.log(data);
                 let compare = {...this.state.compare};
                 compare.name = data.data.symbol;
