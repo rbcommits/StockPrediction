@@ -131,7 +131,7 @@ export default class Statspage extends Component {
                 this.setState({compare});
             })
 
-            if(this.state.result.price <= this.state.compare.price)
+            if(this.state.result.price < this.state.compare.price)
             {
                 return(
                     <div>
